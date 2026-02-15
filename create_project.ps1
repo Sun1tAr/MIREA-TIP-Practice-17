@@ -1,19 +1,21 @@
 # create_project.ps1
-# Запустите этот скрипт в PowerShell. Он создаст все необходимые папки и файлы для проекта.
+# Запустите этот скрипт в PowerShell. Он создаст папку tech-ip-sem2 и все необходимые файлы.
 
-$root = Get-Location
+$root = Join-Path (Get-Location) "tech-ip-sem2"
+if (!(Test-Path $root)) {
+    New-Item -ItemType Directory -Path $root -Force | Out-Null
+}
 
-# Функция для создания файла с содержимым (UTF8 без BOM)
-function Write-File($path, $content) {
-    $fullPath = Join-Path $root $path
+function Write-File($relativePath, $content) {
+    $fullPath = Join-Path $root $relativePath
     $dir = Split-Path $fullPath -Parent
     if (!(Test-Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
     }
-    # Кодировка UTF8 без BOM
+    # UTF8 без BOM
     $utf8 = New-Object System.Text.UTF8Encoding $false
     [System.IO.File]::WriteAllText($fullPath, $content, $utf8)
-    Write-Host "Created: $path"
+    Write-Host "Created: tech-ip-sem2/$relativePath"
 }
 
 # ==============================
@@ -153,6 +155,7 @@ package http
 
 import (
     "encoding/json"
+    "fmt"
     "net/http"
 
     "github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/auth/internal/service"
@@ -655,11 +658,17 @@ func (h *TaskHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 }
 "@
 
-Write-Host "`nProject structure created successfully!"
-Write-Host "Now you can run:"
-Write-Host "  cd services/auth && go mod tidy"
-Write-Host "  cd services/tasks && go mod tidy"
-Write-Host "  cd shared && go mod tidy (if needed)"
-Write-Host "`nThen start services:"
-Write-Host "  Auth:    cd services/auth && go run ./cmd/auth"
-Write-Host "  Tasks:   cd services/tasks && go run ./cmd/tasks (with AUTH_BASE_URL set)"
+Write-Host "`nProject structure created successfully in folder: $root"
+Write-Host "Now you can run the following commands in separate terminals:"
+Write-Host ""
+Write-Host "  cd $root/services/auth"
+Write-Host "  go mod tidy"
+Write-Host "  go run ./cmd/auth"
+Write-Host ""
+Write-Host "  cd $root/services/tasks"
+Write-Host "  go mod tidy"
+Write-Host "  go run ./cmd/tasks"
+Write-Host ""
+Write-Host "Make sure to set environment variables if needed:"
+Write-Host "  Auth: AUTH_PORT (default 8081)"
+Write-Host "  Tasks: TASKS_PORT (default 8082), AUTH_BASE_URL (default http://localhost:8081)"
