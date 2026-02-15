@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/auth/internal/http"
+	handlers "github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/auth/internal/http"
 	"github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/shared/middleware"
 )
 
@@ -17,8 +17,8 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /v1/auth/login", http.LoginHandler)
-	mux.HandleFunc("GET /v1/auth/verify", http.VerifyHandler)
+	mux.HandleFunc("POST /v1/auth/login", handlers.LoginHandler)
+	mux.HandleFunc("GET /v1/auth/verify", handlers.VerifyHandler)
 
 	handler := middleware.RequestIDMiddleware(middleware.LoggingMiddleware(mux))
 

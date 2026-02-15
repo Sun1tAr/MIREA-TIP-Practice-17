@@ -9,7 +9,7 @@ import (
 
 	"github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/shared/middleware"
 	"github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/tasks/internal/client/authclient"
-	"github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/tasks/internal/http"
+	handlers "github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/tasks/internal/http"
 	"github.com/sun1tar/MIREA-TIP-Practice-17/tech-ip-sem2/tasks/internal/service"
 )
 
@@ -25,7 +25,7 @@ func main() {
 
 	authClient := authclient.NewClient(authBaseURL, 3*time.Second)
 	taskService := service.NewTaskService()
-	taskHandler := http.NewTaskHandler(taskService, authClient)
+	taskHandler := handlers.NewTaskHandler(taskService, authClient)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /v1/tasks", taskHandler.CreateTask)
